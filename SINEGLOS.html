@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Website Resmi OSIS SINEGLOS - SMP Negeri 1 Losarang. Struktur Organisasi Lengkap, Daftar Akun Siswa, Profil, Pengumuman.">
+    <title>OSIS SINEGLOS - SMP Negeri 1 Losarang</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #007bff, #f8f9fa); min-height: 100vh; }
+        header { background: linear-gradient(135deg, #007bff, #0056b3); color: white; padding: 60px 0; text-align: center; }
+        .navbar { background: #333; }
+        .navbar-brand { font-weight: bold; }
+        .hero { animation: fadeIn 1s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .profile-card { transition: transform 0.3s; }
+        .profile-card:hover { transform: scale(1.05); }
+        .announcement-item { transition: background 0.3s; }
+        .announcement-item:hover { background: #e9ecef; }
+        .gallery-img { cursor: pointer; transition: transform 0.3s; }
+        .gallery-img:hover { transform: scale(1.1); }
+        .admin-panel, .student-panel { border-left: 4px solid #007bff; padding: 15px; background: #f8f9fa; }
+        #loginModal, #registerModal, #editOrgModal { z-index: 1055; }
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; }
+        .lightbox img { max-width: 90%; max-height: 90%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .form-section { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .student-dashboard { background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 10px 0; }
+        .org-structure { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 20px 0; }
+        .org-level { margin: 20px 0; padding: 15px; border-radius: 10px; }
+        .org-level.ketua { background: linear-gradient(135deg, #007bff, #0056b3); color: white; text-align: center; }
+        .org-level.wakil { background: linear-gradient(135deg, #28a745, #20c997); color: white; text-align: center; }
+        .org-level.staff { background: #f8f9fa; border: 1px solid #dee2e6; }
+        .org-level.sekbid { background: #e3f2fd; border-left: 4px solid #007bff; }
+        .org-member { display: inline-block; margin: 5px; padding: 10px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 150px; text-align: center; }
+        .org-member.empty { background: #f8d7da; color: #721c24; }
+        .org-member i { font-size: 1.5em; margin-bottom: 5px; }
+        .hierarchy-line { border-left: 2px solid #007bff; height: 20px; margin: 0 20px; }
+        .pending { background: #fff3cd; border-left: 4px solid #ffc107; }
+        .approved { background: #d4edda; border-left: 4px solid #28a745; }
+        table { font-size: 0.9em; }
+        .download-btn { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+    </style>
+</head>
+<body>
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login OSIS</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="username" placeholder="Username/NIS" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control" id="password" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Masuk</button>
+                    </form>
+                    <small class="text-muted mt-2 d-block">Admin: admin / osis123 | Siswa: siswa1 / 123456</small>
+                    <hr>
+                    <p class="text-center"><a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Belum punya akun? Daftar di sini</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registrasi Siswa Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Daftar Akun Siswa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" id="regNIS" placeholder="NIS (8 digit)" maxlength="8" pattern="[0-9]{8}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" id="regName" placeholder="Nama Lengkap" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <select class="form-select" id="regClass" required>
+                                    <option value="">Pilih Kelas</option>
+                                    <option value="7A">7A</option><option value="7B">7B</option><option value="7C">7C</option>
+                                    <option value="8A">8A</option><option value="8B">8B</option><option value="8C">8C</option>
+                                    <option value="9A">9A</option><option value="9B">9B</option><option value="9C">9C</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="email" class="form-control" id="regEmail" placeholder="Email Sekolah" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="password" class="form-control" id="regPassword" placeholder="Password (min 6)" minlength="6" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="password" class="form-control" id="regConfirmPassword" placeholder="Konfirmasi Password" minlength="6" required>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input class="form-check-input" type="checkbox" id="regTerms" required>
+                            <label class="form-check-label" for="regTerms">Setuju syarat dan ketentuan</label>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Daftar</button>
+                    </form>
+                    <div id="registerMessage"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Struktur Organisasi Modal -->
+    <div class="modal fade" id="editOrgModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Struktur Organisasi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editOrgForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Ketua OSIS</label>
+                                <input type="text" class="form-control" id="editKetua" placeholder="Nama Ketua">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Wakil Ketua</label>
+                                <input type="text" class="form-control" id="editWakil" placeholder="Nama Wakil">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekretaris 1</label>
+                                <input type="text" class="form-control" id="editSek1" placeholder="Nama Sekretaris 1">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekretaris 2</label>
+                                <input type="text" class="form-control" id="editSek2" placeholder="Nama Sekretaris 2">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Bendahara 1</label>
+                                <input type="text" class="form-control" id="editBen1" placeholder="Nama Bendahara 1">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Bendahara 2</label>
+                                <input type="text" class="form-control" id="editBen2" placeholder="Nama Bendahara 2">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Koordinator Sekbid</label>
+                                <input type="text" class="form-control" id="editKoordinator" placeholder="Nama Koordinator">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekbid 1</label>
+                                <input type="text" class="form-control" id="editSekbid1" placeholder="Nama Sekbid 1">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekbid 2</label>
+                                <input type="text" class="form-control" id="editSekbid2" placeholder="Nama Sekbid 2">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekbid 3</label>
+                                <input type="text" class="form-control" id="editSekbid3" placeholder="Nama Sekbid 3">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekbid 4</label>
+                                <input type="text" class="form-control" id="editSekbid4" placeholder="Nama Sekbid 4">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekbid 5</label>
+                                <input type="text" class="form-control" id="editSekbid5" placeholder="Nama Sekbid 5">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekbid 6</label>
+                                <input type="text" class="form-control" id="editSekbid6" placeholder="Nama Sekbid 6">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekbid 7</label>
+                                <input type="text" class="form-control" id="editSekbid7" placeholder="Nama Sekbid 7">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekbid 8</label>
+                                <input type="text" class="form-control" id="editSekbid8" placeholder="Nama Sekbid 8">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekbid 9</label>
+                                <input type="text" class="form-control" id="editSekbid9" placeholder="Nama Sekbid 9">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Sekbid 10</label>
+                                <input type="text" class="form-control" id="editSekbid10" placeholder="Nama Sekbid 10">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Simpan Perubahan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <img id="lightboxImg" src="" alt="">
+        <button class="btn btn-light position-absolute top-0 end-0 m-2" onclick="closeLightbox()">Tutup</button>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-users"></i> OSIS SINEGLOS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#home">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#organization">Struktur Organisasi</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#profile">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#announcement">Pengumuman</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#gallery">Galeri</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#impressions">Pesan & Kesan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Kontak</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Daftar Siswa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a></li>
+                    <li class="nav-item" id="logoutLink" style="display: none;"><a class="nav-link" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    <li class="nav-item" id="userInfo" style="display: none;"><span class="nav-link"><i class="fas fa-user"></i> <span id="userName"></span></span></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1 class="display-4">Selamat Datang di OSIS SINEGLOS</h1>
+            <p class="lead">Organisasi Siswa Intra Sekolah SMP Negeri 1 Losarang</p>
+            <p class="fs-5">Tanggal: <span id="currentDate"></span></p>
+            <p class="mb-0">Lihat struktur organisasi lengkap kami dan daftarkan akun siswa untuk konten eksklusif!</p>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <section id="home" class="row mb-5">
+            <div class="col-md-8">
+                <h2>Tentang Kami</h2>
+                <p>SMP Negeri 1 Losarang adalah sekolah unggulan di Kabupaten Indramayu. OSIS SINEGLOS dengan struktur organisasi yang lengkap berkomitmen membangun karakter siswa melalui kegiatan inovatif.</p>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Fitur baru: Lihat struktur organisasi lengkap dan buat akun siswa untuk akses eksklusif.
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-sitemap fa-2x text-primary mb-2"></i>
+                                <h6>Struktur Organisasi</h6>
+                                <p class="small">Lihat pengurus lengkap OSIS</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-user-plus fa-2x text-success mb-2"></i>
+                                <h6>Daftar Siswa</h6>
+                                <p class="small">Buat akun untuk akses pribadi</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-calendar-alt fa-2x text-warning mb-2"></i>
+                                <h6>Jadwal & Pengumuman</h6>
+                                <p class="small">Update kegiatan terbaru</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+                        <h5>Visi Kami</h5>
+                        <p>Menciptakan generasi siswa berprestasi dan berakhlak mulia melalui organisasi yang terstruktur.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Struktur Organisasi BARU -->
+        <section id="organization" class="mb-5" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2><i class="fas fa-sitemap text-primary"></i> Struktur Organisasi OSIS SINEGLOS</h2>
+                        <div>
+                            <button class="btn btn-outline-primary me-2" onclick="downloadOrgChart()">📄 Download PDF</button>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editOrgModal" id="editOrgBtn" style="display: none;">
+                                <i class="fas fa-edit"></i> Edit Struktur
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="orgStructure" class="org-structure">
+                        <div class="org-level ketua mb-4">
+                            <h3><i class="fas fa-crown"></i> KETUA OSIS</h3>
+                            <div class="org-member">
+                                <i class="fas fa-user-tie"></i>
+                                <h5 id="orgKetua">Nayla A.R</h5>
+                                <small>Ketua Umum</small>
+                            </div>
+                        </div>
+
+                        <div class="hierarchy-line"></div>
+
+                        <div class="org-level wakil mb-4">
+                            <h4><i class="fas fa-user-friends"></i> WAKIL KETUA & STAFF</h4>
+                            <div class="row justify-content-center">
+                                <div class="col-md-3">
+                                    <div class="org-member">
+                                        <i class="fas fa-user-check"></i>
+                                        <h6 id="orgWakil
