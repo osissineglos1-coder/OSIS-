@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OSIS SINEGLOS - SMPN 1 LOSARANG</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🌟 OSIS SINEGLOS 🌟</h1>
+    <p>SMP Negeri 1 Losarang</p>
+  </header>
+
+  <!-- LOGIN -->
+  <section id="login-section">
+    <h2>🔐 Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Masuk</button>
+    <p id="message"></p>
+  </section>
+
+  <!-- BERANDA (SISWA) -->
+  <section id="home" style="display:none;">
+    <h2>Selamat Datang di Website OSIS SINEGLOS 🎉</h2>
+    <p id="greeting"></p>
+
+    <div class="info-box">
+      <h3>📢 Pengumuman</h3>
+      <ul id="pengumumanList"></ul>
+    </div>
+
+    <div class="info-box">
+      <h3>📅 Kegiatan OSIS</h3>
+      <ul id="kegiatanList"></ul>
+    </div>
+
+    <div class="info-box">
+      <h3>👥 Pengurus OSIS</h3>
+      <ul>
+        <li>Nayla A.R - Ketua</li>
+        <li>Zaura - Wakil Ketua</li>
+        <li>Fina - Sekretaris</li>
+        <li>Dina - Bendahara</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h3>🖼️ Galeri Kegiatan</h3>
+      <div id="galeriView" class="galeri"></div>
+    </div>
+
+    <button onclick="logout()">🚪 Logout</button>
+  </section>
+
+  <!-- ADMIN PANEL -->
+  <section id="admin-panel" style="display:none;">
+    <h2>📋 Panel Admin OSIS</h2>
+    <p id="adminWelcome"></p>
+
+    <div class="menu">
+      <button onclick="showAdminMenu('kegiatan')">📅 Kegiatan</button>
+      <button onclick="showAdminMenu('pengumuman')">📢 Pengumuman</button>
+      <button onclick="showAdminMenu('galeri')">🖼️ Galeri</button>
+      <button onclick="showAdminMenu('anggota')">👥 Anggota</button>
+      <button onclick="logout()">🚪 Logout</button>
+    </div>
+
+    <div id="adminContent"></div>
+  </section>
+
+  <button id="topBtn" onclick="scrollToTop()">⬆️</button>
+  <script src="script.js"></script>
+</body>
+</html>
